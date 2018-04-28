@@ -125,14 +125,27 @@ class cvImg {
       baseImage = tempImg;
     }
 
+    void rotateImg(double angle=90){
+      //Get the rotation matrix
+      Point2f center((baseImage.cols-1)/2.0, (baseImage.rows-1)/2.0);
+      Mat rot = getRotationMatrix2D(center,angle,1.0);
+      //Determine the bounding rectangle
+      Rect2f bbox = RotatedRect(Point2f(), baseImage.size(), angle).boundingRect2f();
+      //Adjust transformation matrix
+      rot.at<double>(0,2) += bbox.width/2.0 - baseImage.cols/2.0;
+      rot.at<double>(1,2) += bbox.height/2.0 - baseImage.rows/2.0;
+
+      Mat tempImg;
+      warpAffine(baseImage, tempImg, rot, bbox.size());
+      baseImage = tempImg;
+    }
 };
 
 int main(int argc, char** argv){
   cvImg testImg;
   testImg.readImg("Lenna.png");
-  testImg.resizeImg();
+  testImg.rotateImg(45);
   testImg.showImg(400,225,"testImg");
-
 
   return 0;
 }
