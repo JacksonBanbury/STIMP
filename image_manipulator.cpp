@@ -7,6 +7,7 @@ Based heavily on the OpenCV Library
 */
 #include <opencv2/opencv.hpp>
 #include <iostream>
+#include <exiv2/exiv2.hpp>
 
 using namespace cv;
 using namespace std;
@@ -17,8 +18,9 @@ class cvImg {
     string fileName; //filename of image
     Mat baseImage;
 
-    void readImg(string fileName){
-      baseImage = imread(fileName);
+    void readImg(string newFilename){
+      baseImage = imread(newFilename);
+      fileName = newFilename;
     }
 
     void showImg(int width=1600, int height=900, string windowName = "Window", int wait=1){
@@ -32,6 +34,14 @@ class cvImg {
 
     void writeImg(string writeName="out.png"){
       imwrite(writeName,baseImage);
+    }
+
+    void readExif(){
+      //Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(fileName);
+      //image->readMetadata();
+      //Exiv2::ExifData &exifData = image->exifData();
+      //cout << "Exif data: ";
+      //cout << exifData;
     }
 
     void hueShift(int shift){
@@ -84,15 +94,13 @@ class cvImg {
       }
     }
 
-    void changeBrightness(){
-      double alpha;
-      int beta;
-
-      cout << "Change the brightness of an image using basic linear transforms:\n";
-      cout << "new(i,j) = a * source(i,j) + b\n";
-      cout << "Enter gain (i.e. contrast) value, alpha: "; cin >> alpha;
-      cout << "\nEnter bias (i.e. brightness) value, beta: "; cin >> beta;
-
+    void changeBrightness(double alpha=-1, int beta=-1){
+      if(alpha==-1 | beta==-1){
+        cout << "Change the brightness of an image using basic linear transforms:\n";
+        cout << "new(i,j) = a * source(i,j) + b\n";
+        cout << "Enter gain value, alpha: "; cin >> alpha;
+        cout << "\nEnter bias value, beta: "; cin >> beta;
+      }
       for(int y=0; y < baseImage.rows; y++){
         for(int x=0; x < baseImage.cols; x++){
           for(int color=0; color<3; color++){
@@ -100,6 +108,11 @@ class cvImg {
           }
         }
       }
+    }
+
+    void changeSaturation(double saturation=0){
+      int scale=1;
+      baseImage.convertTo(baseImage, CV_8UC1, scale, saturation);
     }
 
     void flipHorizontal(){
@@ -139,12 +152,22 @@ class cvImg {
       warpAffine(baseImage, tempImg, rot, bbox.size());
       baseImage = tempImg;
     }
+
+    void colorEnhance(){
+      //Automatic: increases the saturation range of the colors in the layer,
+      //without altering brightness or hue. See https://docs.gimp.org/en/plug-in-color-enhance.html
+
+      int a=0;
+
+    }
+
 };
 
 int main(int argc, char** argv){
   cvImg testImg;
   testImg.readImg("Lenna.png");
-  testImg.rotateImg(45);
+  testImg.changeSaturation(80);
+  testImg.readExif();
   testImg.showImg(400,225,"testImg");
 
   return 0;
