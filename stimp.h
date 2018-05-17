@@ -8,10 +8,11 @@ Potential features to add:
 
 Written by Jackson Banbury, 2018
 
+See the included image_manipulator.cpp for example usage
+
 Based heavily on the OpenCV Library
 */
 
-//Use the below when it is eventually a library (header)
 #ifndef STIMP_H
 #define STIMP_H
 
@@ -53,6 +54,7 @@ class cvImg {
     }
 
     void convertType(int filetype){
+      //TODO
       //convert to specified file type
       //Do this with if(filetype == 1) then convert to jpg, etc
       //use regex to get rid of the extension, then append it to new extension
@@ -61,6 +63,7 @@ class cvImg {
     }
 
     void readExif(){
+      //TODO
       //Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(fileName);
       //image->readMetadata();
       //Exiv2::ExifData &exifData = image->exifData();
@@ -240,6 +243,7 @@ class cvImg {
     }
 
     void stenoWrite(string text){
+      //TODO
       //using regex, if text contants a file extension, interpret
       //it as a file and read the contents of the file
       //Otherwise interpret it as text to hide in the image
@@ -261,6 +265,7 @@ class cvImg {
     }
 
     void stenoRead(){
+      //TODO
       //Read an image and recover the text from the stenography
       //First read the region that defines the length of the text
       //Then read the actual text in bitwise form
@@ -268,7 +273,6 @@ class cvImg {
       //decypher the string
       //Print the string
       //Optionally save it to a file
-
 
     }
 
